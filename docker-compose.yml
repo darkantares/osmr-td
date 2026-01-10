@@ -1,0 +1,25 @@
+networks:
+  monitoring:
+    driver: bridge
+  dokploy-network:
+    external: true
+services:
+  osrm:
+    image: osrm/osrm-backend:latest
+    container_name: osrm
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./data:/data
+    command: >
+      sh -c "
+      if [ ! -f /data/haiti-and-domrep.osrm ]; then
+        echo 'Extracting map...';
+        osrm-extract -p /opt/car.lua /data/haiti-and-domrep.osm.pbf &&
+        osrm-partition /data/haiti-and-domrep.osrm &&
+        osrm-customize /data/haiti-and-domrep.osrm;
+      fi &&
+      echo 'Starting OSRM server...';
+      osrm-routed --algorithm mld /data/haiti-and-domrep.osrm
+      "
+    restart: unless-stopped
