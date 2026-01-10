@@ -13,13 +13,13 @@ services:
       - ./data:/data
     command: >
       sh -c "
-      if [ ! -f /data/haiti-and-domrep.osrm ]; then
+      if [ ! -f /data/haiti-domrep.osrm ]; then
         echo 'Extracting map...';
-        osrm-extract -p /opt/car.lua /data/haiti-and-domrep.osm.pbf &&
-        osrm-partition /data/haiti-and-domrep.osrm &&
-        osrm-customize /data/haiti-and-domrep.osrm;
+        osrm-extract -p /opt/car.lua /data/haiti-domrep.osm.pbf &&
+        osrm-partition /data/haiti-domrep.osrm &&
+        osrm-customize /data/haiti-domrep.osrm;
       fi &&
       echo 'Starting OSRM server...';
-      osrm-routed --algorithm mld /data/haiti-and-domrep.osrm
+      osrm-routed --algorithm mld /data/haiti-domrep.osrm
       "
     restart: unless-stopped
