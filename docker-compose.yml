@@ -1,12 +1,8 @@
-networks:
-  monitoring:
-    driver: bridge
-  dokploy-network:
-    external: true
 services:
   osrm:
     image: osrm/osrm-backend:latest
     container_name: osrm
+    restart: unless-stopped
     ports:
       - "5001:5000"
     volumes:
@@ -22,4 +18,9 @@ services:
       echo 'Starting OSRM server...';
       osrm-routed --algorithm mld /data/haiti-domrep.osrm
       "
-    restart: unless-stopped
+    networks:
+      - dokploy-network
+
+networks:
+  dokploy-network:
+    external: true
